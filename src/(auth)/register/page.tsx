@@ -46,7 +46,15 @@ function RegisterPage() {
         setIsLoading(() => false)
     }
     return (
-        <div>RegisterPage</div>
+        <div>
+            {error && (
+                <p>{error}</p>
+            )}
+
+            <form onSubmit={handleSubmit}>
+                
+            </form>
+        </div>
     )
 }
 
