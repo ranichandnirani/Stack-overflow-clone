@@ -1,6 +1,6 @@
 "use client";
 
-import { Models } from "appwrite";
+import { Models } from "node-appwrite";
 import React from "react";
 import VoteButtons from "./VoteButtons";
 import { useAuthStore } from "@/store/Auth";
@@ -21,7 +21,11 @@ type Answer = Models.Document & {
     };
     upvotesDocuments: Models.DocumentList<Models.Document>;
     downvotesDocuments: Models.DocumentList<Models.Document>;
-    comments: Models.DocumentList<Models.Document>;
+    comments: Models.DocumentList<Models.Document & {
+        content: string;
+        authorId: string;
+        author: { name: string };
+    }>;
 };
 
 const Answers = ({

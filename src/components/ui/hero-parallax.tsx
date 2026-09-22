@@ -11,8 +11,10 @@ import {
 
 
 export const HeroParallax = ({
+  header,
   products,
 }: {
+  header?: React.ReactNode;
   products: {
     title: string;
     link: string;
@@ -57,8 +59,9 @@ export const HeroParallax = ({
   return (
     <div
       ref={ref}
-      className="h-[300vh] py-40 overflow-hidden  antialiased relative flex flex-col self-auto [perspective:1000px] [transform-style:preserve-3d]"
+      className="h-[300vh] py-40 overflow-hidden  antialiased relative flex flex-col self-auto perspective-[1000px] transform-3d"
     >
+      {header}
       <Header />
       <motion.div
         style={{
@@ -136,7 +139,7 @@ export const ProductCard = ({
         y: -20,
       }}
       key={product.title}
-      className="group/product h-96 w-[30rem] relative shrink-0"
+      className="group/product h-96 w-120 relative shrink-0"
     >
       <a
         href={product.link}
@@ -147,7 +150,7 @@ export const ProductCard = ({
           src={product.thumbnail}
           height="600"
           width="600"
-          className="object-cover object-left-top absolute h-full w-full inset-0"
+          className="object-cover object-top-left absolute h-full w-full inset-0"
           alt={product.title}
         />
       </a>

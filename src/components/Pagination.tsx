@@ -1,19 +1,20 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 
 const Pagination = ({
     className,
     total,
     limit,
+    page: initialPage = "1",
 }: {
     className?: string;
     limit: number;
     total: number;
+    page?: string;
 }) => {
-    const searchParams = useSearchParams();
-    const page = searchParams.get("page") || "1";
+    const page = initialPage;
     const totalPages = Math.ceil(total / limit);
     const router = useRouter();
     const pathnanme = usePathname();
@@ -21,7 +22,7 @@ const Pagination = ({
     const prev = () => {
         if (page <= "1") return;
         const pageNumber = parseInt(page);
-        const newSearchParams = new URLSearchParams(searchParams);
+        const newSearchParams = new URLSearchParams(window.location.search);
         newSearchParams.set("page", `${pageNumber - 1}`);
         router.push(`${pathnanme}?${newSearchParams}`);
     };
@@ -29,7 +30,7 @@ const Pagination = ({
     const next = () => {
         if (page >= `${totalPages}`) return;
         const pageNumber = parseInt(page);
-        const newSearchParams = new URLSearchParams(searchParams);
+        const newSearchParams = new URLSearchParams(window.location.search);
         newSearchParams.set("page", `${pageNumber + 1}`);
         router.push(`${pathnanme}?${newSearchParams}`);
     };

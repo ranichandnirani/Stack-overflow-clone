@@ -15,7 +15,7 @@ export const FloatingNav = ({
   navItems: {
     name: string;
     link: string;
-    icon?: JSX.Element;
+    icon?: React.ReactElement;
   }[];
   className?: string;
 }) => {
@@ -53,7 +53,7 @@ export const FloatingNav = ({
           duration: 0.2,
         }}
         className={cn(
-          "flex max-w-fit fixed top-10 inset-x-0 mx-auto z-[5000] items-center justify-center",
+          "flex max-w-fit fixed top-10 inset-x-0 mx-auto z-5000 items-center justify-center",
           className
         )}
       >

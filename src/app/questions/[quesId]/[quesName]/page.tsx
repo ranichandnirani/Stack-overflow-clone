@@ -2,8 +2,8 @@ import Answers from "@/components/Answers";
 import Comments from "@/components/Comments";
 import { MarkdownPreview } from "@/components/RTE";
 import VoteButtons from "@/components/VoteButtons";
-import Particles from "@/components/magicui/particles";
-import ShimmerButton from "@/components/magicui/shimmer-button";
+import { Particles } from "@/components/magicui/particles";
+import { ShimmerButton } from "@/components/magicui/shimmer-button";
 import { avatars } from "@/models/client/config";
 import {
     answerCollection,
@@ -18,12 +18,11 @@ import { storage } from "@/models/client/config";
 import { UserPrefs } from "@/store/Auth";
 import convertDateToRelativeTime from "@/utils/relativeTime";
 import slugify from "@/utils/slugify";
-import { IconEdit } from "@tabler/icons-react";
 import Link from "next/link";
 import { Query } from "node-appwrite";
 import React from "react";
-import DeleteQuestion from "../DeleteQuestion";
-import EditQuestion from "../EditQuestion";
+import DeleteQuestion from "./DeleteQuestion";
+import EditQuestion from "./EditQuestion";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 
 const Page = async ({ params }: { params: { quesId: string; quesName: string } }) => {
@@ -174,7 +173,7 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
                                     storage.getFilePreview(
                                         questionAttachmentBucket,
                                         question.attachmentId
-                                    ).href
+                                    )
                                 }
                                 alt={question.title}
                                 className="mt-3 rounded-lg"
@@ -194,7 +193,7 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
                         <div className="mt-4 flex items-center justify-end gap-1">
                             <picture>
                                 <img
-                                    src={avatars.getInitials(author.name, 36, 36).href}
+                                    src={avatars.getInitials(author.name, 36, 36)}
                                     alt={author.name}
                                     className="rounded-lg"
                                 />
@@ -212,7 +211,7 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
                             </div>
                         </div>
                         <Comments
-                            comments={comments}
+                            comments={comments as unknown as React.ComponentProps<typeof Comments>["comments"]}
                             className="mt-4"
                             type="question"
                             typeId={question.$id}
@@ -220,7 +219,10 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
                         <hr className="my-4 border-white/40" />
                     </div>
                 </div>
-                <Answers answers={answers} questionId={question.$id} />
+                <Answers
+                    answers={answers as unknown as React.ComponentProps<typeof Answers>["answers"]}
+                    questionId={question.$id}
+                />
             </div>
         </TracingBeam>
     );

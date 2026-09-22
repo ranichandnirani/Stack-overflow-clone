@@ -1,22 +1,17 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 
-const Search = () => {
+const Search = ({ initialSearch = "" }: { initialSearch?: string }) => {
     const pathname = usePathname();
-    const searchParams = useSearchParams();
     const router = useRouter();
-    const [search, setSearch] = React.useState(searchParams.get("search") || "");
-
-    React.useEffect(() => {
-        setSearch(() => searchParams.get("search") || "");
-    }, [searchParams]);
+    const [search, setSearch] = React.useState(initialSearch);
 
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const newSearchParams = new URLSearchParams(searchParams);
+        const newSearchParams = new URLSearchParams(window.location.search);
         newSearchParams.set("search", search);
         router.push(`${pathname}?${newSearchParams}`);
     };

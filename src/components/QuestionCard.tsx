@@ -9,11 +9,11 @@ import { avatars } from "@/models/client/config";
 import convertDateToRelativeTime from "@/utils/relativeTime";
 
 type QuestionFields = Models.Document & {
-    title: string;
-    tags: string[];
-    totalVotes: number;
-    totalAnswers: number;
-    author: {
+    title?: string;
+    tags?: string[];
+    totalVotes?: number;
+    totalAnswers?: number;
+    author?: {
         $id: string;
         name: string;
         reputation: number;
@@ -21,6 +21,7 @@ type QuestionFields = Models.Document & {
 };
 
 const QuestionCard = ({ ques }: { ques: QuestionFields }) => {
+    const author = ques.author ?? { $id: "", name: "Unknown user", reputation: 0 };
     const [height, setHeight] = React.useState(0);
     const ref = React.useRef<HTMLDivElement>(null);
 
@@ -37,18 +38,18 @@ const QuestionCard = ({ ques }: { ques: QuestionFields }) => {
         >
             <BorderBeam size={height} duration={12} delay={9} />
             <div className="relative shrink-0 text-sm sm:text-right">
-                <p>{ques.totalVotes} votes</p>
-                <p>{ques.totalAnswers} answers</p>
+                <p>{ques.totalVotes ?? 0} votes</p>
+                <p>{ques.totalAnswers ?? 0} answers</p>
             </div>
             <div className="relative w-full">
                 <Link
-                    href={`/questions/${ques.$id}/${slugify(ques.title)}`}
+                    href={`/questions/${ques.$id}/${slugify(ques.title ?? "question")}`}
                     className="text-orange-500 duration-200 hover:text-orange-600"
                 >
-                    <h2 className="text-xl">{ques.title}</h2>
+                    <h2 className="text-xl">{ques.title ?? "Untitled question"}</h2>
                 </Link>
                 <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
-                    {ques.tags.map((tag: string) => (
+                    {(ques.tags ?? []).map((tag: string) => (
                         <Link
                             key={tag}
                             href={`/questions?tag=${tag}`}
@@ -60,18 +61,18 @@ const QuestionCard = ({ ques }: { ques: QuestionFields }) => {
                     <div className="ml-auto flex items-center gap-1">
                         <picture>
                             <img
-                                src={avatars.getInitials(ques.author.name, 24, 24)}
-                                alt={ques.author.name}
+                                src={avatars.getInitials(author.name, 24, 24)}
+                                alt={author.name}
                                 className="rounded-lg"
                             />
                         </picture>
                         <Link
-                            href={`/users/${ques.author.$id}/${slugify(ques.author.name)}`}
+                            href={`/users/${author.$id}/${slugify(author.name)}`}
                             className="text-orange-500 hover:text-orange-600"
                         >
-                            {ques.author.name}
+                            {author.name}
                         </Link>
-                        <strong>&quot;{ques.author.reputation}&quot;</strong>
+                        <strong>&quot;{author.reputation}&quot;</strong>
                     </div>
                     <span>asked {convertDateToRelativeTime(new Date(ques.$createdAt))}</span>
                 </div>

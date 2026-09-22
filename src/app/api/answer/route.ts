@@ -24,13 +24,13 @@ export async function POST(request:NextRequest) {
             status: 201
         })
 
-    } catch(error: any) {
+    } catch(error: unknown) {
         return NextResponse.json(
             {
-                error: error?.message || "Error creating answer"
+                error: error instanceof Error ? error.message : "Error creating answer"
             },
             {
-                status: error?.status || error?.code || 500
+                status: getErrorStatus(error)
             }
         )
     }
@@ -59,14 +59,23 @@ export async function DELETE(request:NextRequest) {
             }
         )
 
-    } catch (error:any) {
+    } catch (error: unknown) {
         return NextResponse.json(
             {
-                message: error?.message || "Error deleting the answer"
+                message: error instanceof Error ? error.message : "Error deleting the answer"
             },
             {
-                status: error?.status || error?.code || 500
+                status: getErrorStatus(error)
             }
         )
     }
+}
+
+function getErrorStatus(error: unknown) {
+    if (typeof error === "object" && error !== null) {
+        if ("status" in error && typeof error.status === "number") return error.status;
+        if ("code" in error && typeof error.code === "number") return error.code;
+    }
+
+    return 500;
 }

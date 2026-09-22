@@ -94,20 +94,22 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
     };
 
     const create = async () => {
-        if (!formData.attachment) throw new Error("Please upload an image");
-
-        const storageResponse = await storage.createFile(
-            questionAttachmentBucket,
-            ID.unique(),
-            formData.attachment
-        );
+        let attachmentId: string | undefined;
+        if (formData.attachment) {
+            const storageResponse = await storage.createFile(
+                questionAttachmentBucket,
+                ID.unique(),
+                formData.attachment
+            );
+            attachmentId = storageResponse.$id;
+        }
 
         const response = await databases.createDocument(db, questionCollection, ID.unique(), {
             title: formData.title,
             content: formData.content,
             authorId: formData.authorId,
             tags: Array.from(formData.tags),
-            attachmentId: storageResponse.$id,
+            ...(attachmentId ? { attachmentId } : {}),
         });
 
         loadConfetti();
@@ -216,7 +218,7 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
                     Image
                     <br />
                     <small>
-                        Add image to your question to make it more clear and easier to understand.
+                        Optional. Add an image only when it helps explain the problem.
                     </small>
                 </Label>
                 <Input
