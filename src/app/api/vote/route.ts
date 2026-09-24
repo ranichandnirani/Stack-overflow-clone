@@ -146,21 +146,10 @@ export async function POST(request: NextRequest) {
         status: 200,
       },
     );
-  } catch (error: unknown) {
+  } catch (error: any) {
     return NextResponse.json(
-      {
-        message: error instanceof Error ? error.message : "Error deleting answer",
-      },
-      { status: getErrorStatus(error) },
+      { message: error?.message || "Error deleting answer" },
+      { status: error?.status || error?.code || 500 },
     );
   }
-}
-
-function getErrorStatus(error: unknown) {
-  if (typeof error === "object" && error !== null) {
-    if ("status" in error && typeof error.status === "number") return error.status;
-    if ("code" in error && typeof error.code === "number") return error.code;
-  }
-
-  return 500;
 }

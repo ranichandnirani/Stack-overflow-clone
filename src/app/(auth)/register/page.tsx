@@ -23,13 +23,21 @@ export default function RegisterPage() {
 
         setIsLoading(true);
         setError("");
-        const response = await createAccount(`${firstname} ${lastname}`, email, password);
+
+        const response = await createAccount(`
+            ${firstname} ${lastname}`, 
+            email?.toString(), 
+            password?.toString()
+        );
 
         if (response.error) {
-            setError(response.error.message);
+            setError(() => response.error!.message);
         } else {
-            const loginResponse = await login(email, password);
-            if (loginResponse.error) setError(loginResponse.error.message);
+            const loginResponse = await login(email.toString(), password.toString());
+
+            if (loginResponse.error) {
+                setError(() => loginResponse.error!.message);
+            }
         }
 
         setIsLoading(false);

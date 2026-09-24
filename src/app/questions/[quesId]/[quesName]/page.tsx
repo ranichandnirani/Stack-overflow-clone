@@ -35,13 +35,13 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
         databases.listDocuments(db, voteCollection, [
             Query.equal("typeId", params.quesId),
             Query.equal("type", "question"),
-            Query.equal("voteStatus", "upvoted"),
+            Query.equal("votestatus", "upvoted"),
             Query.limit(1), // for optimization
         ]),
         databases.listDocuments(db, voteCollection, [
             Query.equal("typeId", params.quesId),
             Query.equal("type", "question"),
-            Query.equal("voteStatus", "downvoted"),
+            Query.equal("votestatus", "downvoted"),
             Query.limit(1), // for optimization
         ]),
         databases.listDocuments(db, commentCollection, [
@@ -79,13 +79,13 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
                     databases.listDocuments(db, voteCollection, [
                         Query.equal("typeId", answer.$id),
                         Query.equal("type", "answer"),
-                        Query.equal("voteStatus", "upvoted"),
+                        Query.equal("votestatus", "upvoted"),
                         Query.limit(1), // for optimization
                     ]),
                     databases.listDocuments(db, voteCollection, [
                         Query.equal("typeId", answer.$id),
                         Query.equal("type", "answer"),
-                        Query.equal("voteStatus", "downvoted"),
+                        Query.equal("votestatus", "downvoted"),
                         Query.limit(1), // for optimization
                     ]),
                 ]);
