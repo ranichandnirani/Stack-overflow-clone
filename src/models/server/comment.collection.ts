@@ -31,10 +31,24 @@ export default async function createCommentCollection() {
         databases.createStringAttribute(
             db,
             commentCollection,
+            "authorId",
+            50,
+            true
+        ),
+        databases.createStringAttribute(
+            db,
+            commentCollection,
             "typeId",
             50,
             true
         ),
     ])
     console.log("Comment collection attributes are created successfully");
+}
+
+export async function ensureCommentAuthorIdAttribute() {
+    const collection = await databases.getCollection(db, commentCollection);
+    if (collection.attributes.some(attribute => attribute.key === "authorId")) return;
+
+    await databases.createStringAttribute(db, commentCollection, "authorId", 50, true);
 }
