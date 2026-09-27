@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import convertDateToRelativeTime from "@/utils/relativeTime";
 import slugify from "@/utils/slugify";
 import { IconTrash } from "@tabler/icons-react";
-import { ID, Models } from "node-appwrite";
+import { ID, Models } from "appwrite";
 
 type Comment = Models.Document & {
     content: string;

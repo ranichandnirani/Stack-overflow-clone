@@ -7,7 +7,7 @@ import slugify from "@/utils/slugify";
 import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Header() {
-    const { user } = useAuthStore();
+    const { user, logout } = useAuthStore();
 
     const navItems = [
         {
@@ -31,7 +31,7 @@ export default function Header() {
 
     return (
         <div className="relative w-full">
-            <FloatingNav navItems={navItems} />
+            <FloatingNav navItems={navItems} isAuthenticated={!!user} onLogout={logout} />
             <ThemeToggle />
         </div>
     );

@@ -25,28 +25,31 @@ import DeleteQuestion from "./DeleteQuestion";
 import EditQuestion from "./EditQuestion";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 
-const Page = async ({ params }: { params: { quesId: string; quesName: string } }) => {
+const Page = async ({ params }: { params: Promise<{ quesId: string; quesName: string }> }) => {
+
+    const { quesId } = await params;
+
     const [question, answers, upvotes, downvotes, comments] = await Promise.all([
-        databases.getDocument(db, questionCollection, params.quesId),
+        databases.getDocument(db, questionCollection, quesId),
         databases.listDocuments(db, answerCollection, [
             Query.orderDesc("$createdAt"),
-            Query.equal("questionId", params.quesId),
+            Query.equal("questionId", quesId),
         ]),
         databases.listDocuments(db, voteCollection, [
-            Query.equal("typeId", params.quesId),
+            Query.equal("typeId", quesId),
             Query.equal("type", "question"),
-            Query.equal("votestatus", "upvoted"),
+            Query.equal("voteStatus", "upvoted"),
             Query.limit(1), // for optimization
         ]),
         databases.listDocuments(db, voteCollection, [
-            Query.equal("typeId", params.quesId),
+            Query.equal("typeId", quesId),
             Query.equal("type", "question"),
-            Query.equal("votestatus", "downvoted"),
+            Query.equal("voteStatus", "downvoted"),
             Query.limit(1), // for optimization
         ]),
         databases.listDocuments(db, commentCollection, [
             Query.equal("type", "question"),
-            Query.equal("typeId", params.quesId),
+            Query.equal("typeId", quesId),
             Query.orderDesc("$createdAt"),
         ]),
     ]);
@@ -79,13 +82,13 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
                     databases.listDocuments(db, voteCollection, [
                         Query.equal("typeId", answer.$id),
                         Query.equal("type", "answer"),
-                        Query.equal("votestatus", "upvoted"),
+                        Query.equal("voteStatus", "upvoted"),
                         Query.limit(1), // for optimization
                     ]),
                     databases.listDocuments(db, voteCollection, [
                         Query.equal("typeId", answer.$id),
                         Query.equal("type", "answer"),
-                        Query.equal("votestatus", "downvoted"),
+                        Query.equal("voteStatus", "downvoted"),
                         Query.limit(1), // for optimization
                     ]),
                 ]);
@@ -118,6 +121,13 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
             })
         ),
     ]);
+
+    // Convert Appwrite response objects into plain serializable objects
+    // before passing them from this Server Component to Client Components.
+    const plainAnswers = JSON.parse(JSON.stringify(answers));
+    const plainComments = JSON.parse(JSON.stringify(comments));
+    const plainUpvotes = JSON.parse(JSON.stringify(upvotes));
+    const plainDownvotes = JSON.parse(JSON.stringify(downvotes));
 
     return (
         <TracingBeam className="container pl-6">
@@ -155,8 +165,8 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
                             type="question"
                             id={question.$id}
                             className="w-full"
-                            upvotes={upvotes}
-                            downvotes={downvotes}
+                            upvotes={plainUpvotes}
+                            downvotes={plainDownvotes}
                         />
                         <EditQuestion
                             questionId={question.$id}
@@ -211,7 +221,7 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
                             </div>
                         </div>
                         <Comments
-                            comments={comments as unknown as React.ComponentProps<typeof Comments>["comments"]}
+                            comments={plainComments as unknown as React.ComponentProps<typeof Comments>["comments"]}
                             className="mt-4"
                             type="question"
                             typeId={question.$id}
@@ -220,7 +230,7 @@ const Page = async ({ params }: { params: { quesId: string; quesName: string } }
                     </div>
                 </div>
                 <Answers
-                    answers={answers as unknown as React.ComponentProps<typeof Answers>["answers"]}
+                    answers={plainAnswers as unknown as React.ComponentProps<typeof Answers>["answers"]}
                     questionId={question.$id}
                 />
             </div>

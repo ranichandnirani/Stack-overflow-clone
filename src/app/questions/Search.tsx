@@ -17,14 +17,14 @@ const Search = ({ initialSearch = "" }: { initialSearch?: string }) => {
     };
 
     return (
-        <form className="flex w-full flex-row gap-4" onSubmit={handleSearch}>
+        <form className="flex w-full flex-row gap-3" onSubmit={handleSearch}>
             <Input
                 type="text"
                 placeholder="Search questions"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
             />
-            <button className="shrink-0 rounded bg-orange-500 px-4 py-2 font-bold text-white hover:bg-orange-600">
+            <button className="shrink-0 rounded bg-orange-500 px-3 py-1 font-bold text-white hover:bg-orange-600">
                 Search
             </button>
         </form>

@@ -102,6 +102,7 @@ const VoteButtons = ({
     return (
         <div className={cn("flex shrink-0 flex-col items-center justify-start gap-y-4", className)}>
             <button
+                
                 className={cn(
                     "flex h-10 w-10 items-center justify-center rounded-full border p-1 duration-200 hover:bg-white/10",
                     votedDocument && votedDocument.voteStatus === "upvoted"

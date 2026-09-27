@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
 import {
   motion,
   AnimatePresence,
@@ -11,6 +12,8 @@ import { cn } from "@/lib/utils";
 export const FloatingNav = ({
   navItems,
   className,
+  isAuthenticated = false,
+  onLogout,
 }: {
   navItems: {
     name: string;
@@ -18,6 +21,8 @@ export const FloatingNav = ({
     icon?: React.ReactElement;
   }[];
   className?: string;
+  isAuthenticated?: boolean;
+  onLogout?: () => void;
 }) => {
   const { scrollYProgress } = useScroll();
   const [visible, setVisible] = useState(false);
@@ -78,9 +83,21 @@ export const FloatingNav = ({
           <div className="h-5 w-px bg-neutral-200 dark:bg-white/10" />
 
           {/* CTA Button */}
-          <button className="relative rounded-full bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/20 dark:bg-white dark:text-black dark:hover:bg-neutral-100 dark:hover:shadow-white/20">
-            <span>Login</span>
-          </button>
+          {isAuthenticated ? (
+            <button
+              onClick={onLogout}
+              className="relative rounded-full bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/20 dark:bg-white dark:text-black dark:hover:bg-neutral-100 dark:hover:shadow-white/20"
+            >
+              <span>Logout</span>
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              className="relative rounded-full bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/20 dark:bg-white dark:text-black dark:hover:bg-neutral-100 dark:hover:shadow-white/20"
+            >
+              <span>Login</span>
+            </Link>
+          )}
         </div>
       </motion.div>
     </AnimatePresence>

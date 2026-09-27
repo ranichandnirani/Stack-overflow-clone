@@ -3,10 +3,14 @@ import { databases } from "@/models/server/config";
 import React from "react";
 import EditQues, { type Question } from "./EditQues";
 
-const Page = async ({ params }: { params: { quesId: string; quesName: string } }) => {
-    const question = await databases.getDocument(db, questionCollection, params.quesId);
+const Page = async ({ params }: { params: Promise<{ quesId: string; quesName: string }> }) => {
+    const { quesId } = await params;
 
-    return <EditQues question={question as unknown as Question} />;
+    const question = await databases.getDocument(db, questionCollection, quesId);
+
+    const plainQuestion = JSON.parse(JSON.stringify(question));
+
+    return <EditQues question={plainQuestion as unknown as Question} />;
 };
 
 export default Page;

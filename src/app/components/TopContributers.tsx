@@ -6,6 +6,8 @@ import { Models, Query } from "node-appwrite";
 import { UserPrefs } from "@/store/Auth";
 import convertDateToRelativeTime from "@/utils/relativeTime";
 import { avatars } from "@/models/client/config";
+import Link from "next/link";
+import slugify from "@/utils/slugify";
 
 const Notification = ({ user }: { user: Models.User<UserPrefs> }) => {
     return (
@@ -20,18 +22,23 @@ const Notification = ({ user }: { user: Models.User<UserPrefs> }) => {
                 "transform-gpu dark:bg-transparent dark:backdrop-blur-md dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]"
             )}
         >
-            <div className="flex flex-row items-center gap-3">
-                <picture>
+            <div className="flex min-w-0 flex-row items-center gap-3">
+                <picture className="shrink-0">
                     <img
                         src={avatars.getInitials(user.name, 40, 40)}
                         alt={user.name}
-                        className="rounded-2xl"
+                        className="h-10 w-10 rounded-full"
                     />
                 </picture>
-                <div className="flex flex-col overflow-hidden">
-                    <figcaption className="flex flex-row items-center whitespace-pre text-lg font-medium dark:text-white">
-                        <span className="text-sm sm:text-lg">{user.name}</span>
-                        <span className="mx-1">·</span>
+                <div className="flex min-w-0 flex-1 flex-col">
+                    <figcaption className="flex min-w-0 flex-wrap items-center gap-x-1 text-lg font-medium dark:text-white">
+                        <Link
+                            href={`/users/${user.$id}/${slugify(user.name)}`}
+                            className="truncate text-sm hover:text-orange-500 sm:text-lg"
+                        >
+                            {user.name}
+                        </Link>
+                        <span aria-hidden="true" className="text-gray-500">·</span>
                         <span className="text-xs text-gray-500">
                             {convertDateToRelativeTime(new Date(user.$updatedAt))}
                         </span>

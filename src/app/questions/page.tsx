@@ -77,10 +77,10 @@ const Page = async ({
             <div className="mb-4">
                 <Search initialSearch={searchParams.search} />
             </div>
-            <div className="mb-4">
-                <p>{questions.total} questions</p>
+            <div className="mb-4 mx-auto w-full max-w-7xl space-y-6">
+                <p>{questions.total} Questions</p>
             </div>
-            <div className="mb-4 max-w-3xl space-y-6">
+            <div className="mx-auto mb-4 w-full max-w-3xl space-y-6">
                 {questions.documents.map(ques => (
                     <QuestionCard key={ques.$id} ques={ques} />
                 ))}

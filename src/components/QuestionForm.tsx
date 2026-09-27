@@ -164,7 +164,8 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
 
         try {
             const response = question ? await update() : await create();
-
+            console.log("Redirecting to:", `/questions/${response.$id}/${slugify(formData.title)}`);
+            
             router.push(`/questions/${response.$id}/${slugify(formData.title)}`);
         } catch (error: unknown) {
             setError(() => (error instanceof Error ? error.message : "Something went wrong"));
