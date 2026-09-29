@@ -62,6 +62,22 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
 
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState("");
+    const [attachmentPreview, setAttachmentPreview] = React.useState<string>();
+
+    React.useEffect(() => {
+        if (!formData.attachment) {
+            setAttachmentPreview(undefined);
+            return;
+        }
+
+        const previewUrl = URL.createObjectURL(formData.attachment);
+        setAttachmentPreview(previewUrl);
+        return () => URL.revokeObjectURL(previewUrl);
+    }, [formData.attachment]);
+
+    const existingAttachmentPreview = question?.attachmentId
+        ? storage.getFileView(questionAttachmentBucket, question.attachmentId)
+        : undefined;
 
     const loadConfetti = (timeInMS = 3000) => {
         const end = Date.now() + timeInMS; // 3 seconds
@@ -237,6 +253,13 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
                         }));
                     }}
                 />
+                {(attachmentPreview || existingAttachmentPreview) && (
+                    <img
+                        src={attachmentPreview || existingAttachmentPreview}
+                        alt="Question attachment preview"
+                        className="max-h-64 w-fit max-w-full rounded-lg object-contain"
+                    />
+                )}
             </LabelInputContainer>
             <LabelInputContainer>
                 <Label htmlFor="tag">

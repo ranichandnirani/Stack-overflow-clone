@@ -1,6 +1,6 @@
 import { databases, users } from "@/models/server/config";
 import { answerCollection, db, voteCollection, questionCollection } from "@/models/name";
-import { Query } from "node-appwrite";
+import { AppwriteException, Query } from "node-appwrite";
 import React from "react";
 import Link from "next/link";
 import { ShimmerButton } from "@/components/magicui/shimmer-button";
@@ -37,7 +37,12 @@ const Page = async ({
     questions.documents = await Promise.all(
         questions.documents.map(async ques => {
             const [author, answers, votes] = await Promise.all([
-                users.get<UserPrefs>(ques.authorId),
+                users.get<UserPrefs>(ques.authorId).catch(error => {
+                    if (error instanceof AppwriteException && error.code === 404) {
+                        return null;
+                    }
+                    throw error;
+                }),
                 databases.listDocuments(db, answerCollection, [
                     Query.equal("questionId", ques.$id),
                     Query.limit(1), // for optimization
@@ -53,11 +58,13 @@ const Page = async ({
                 ...ques,
                 totalAnswers: answers.total,
                 totalVotes: votes.total,
-                author: {
-                    $id: author.$id,
-                    reputation: author.prefs.reputation,
-                    name: author.name,
-                },
+                author: author
+                    ? {
+                          $id: author.$id,
+                          reputation: author.prefs.reputation,
+                          name: author.name,
+                      }
+                    : undefined,
             };
         })
     );

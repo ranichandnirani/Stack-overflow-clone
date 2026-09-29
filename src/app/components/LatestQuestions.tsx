@@ -2,7 +2,7 @@ import QuestionCard from "@/components/QuestionCard";
 import { answerCollection, db, questionCollection, voteCollection } from "@/models/name";
 import { databases, users } from "@/models/server/config";
 import { UserPrefs } from "@/store/Auth";
-import { Query } from "node-appwrite";
+import { AppwriteException, Query } from "node-appwrite";
 import React from "react";
 
 const LatestQuestions = async () => {
@@ -15,7 +15,12 @@ const LatestQuestions = async () => {
     questions.documents = await Promise.all(
         questions.documents.map(async ques => {
             const [author, answers, votes] = await Promise.all([
-                users.get<UserPrefs>(ques.authorId),
+                users.get<UserPrefs>(ques.authorId).catch(error => {
+                    if (error instanceof AppwriteException && error.code === 404) {
+                        return null;
+                    }
+                    throw error;
+                }),
                 databases.listDocuments(db, answerCollection, [
                     Query.equal("questionId", ques.$id),
                     Query.limit(1), // for optimization
@@ -31,11 +36,13 @@ const LatestQuestions = async () => {
                 ...ques,
                 totalAnswers: answers.total,
                 totalVotes: votes.total,
-                author: {
-                    $id: author.$id,
-                    reputation: author.prefs.reputation,
-                    name: author.name,
-                },
+                author: author
+                    ? {
+                          $id: author.$id,
+                          reputation: author.prefs.reputation,
+                          name: author.name,
+                      }
+                    : undefined,
             };
         })
     );

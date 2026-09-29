@@ -44,3 +44,19 @@ export default async function createQuestionCollection() {
         ),
     ]);
 }
+
+export async function ensureQuestionPermissions() {
+    await databases.updateCollection(
+        db,
+        questionCollection,
+        questionCollection,
+        [
+            Permission.read("any"),
+            Permission.read("users"),
+            Permission.create("users"),
+            Permission.update("users"),
+            Permission.delete("users"),
+        ]
+    );
+    console.log("Question collection permissions ensured");
+}

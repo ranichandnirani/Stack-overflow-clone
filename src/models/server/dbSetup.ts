@@ -2,7 +2,7 @@ import { db } from "../name";
 import 'server-only';
 import createCommentCollection, { ensureCommentAuthorIdAttribute } from "./comment.collection";
 import createVoteCollection from "./vote.collection";
-import createQuestionCollection from "./question.collection";
+import createQuestionCollection, { ensureQuestionPermissions } from "./question.collection";
 import createAnswerCollection from "./answer.collection";
 import { databases } from "./config";
 
@@ -19,10 +19,11 @@ export default async function getOrCreateDB() {
     if (databaseExists) {
         try {
             commentAuthorIdSetup ??= ensureCommentAuthorIdAttribute().catch(error => {
-            commentAuthorIdSetup = undefined;
-            throw error;
-        });
+                commentAuthorIdSetup = undefined;
+                throw error;
+            });
             await commentAuthorIdSetup;
+            await ensureQuestionPermissions();
             console.log("Database connected successfully");
         } catch (error) {
             console.error("Error ensuring comment collection schema:", error);
