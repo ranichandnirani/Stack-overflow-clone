@@ -59,6 +59,44 @@ export const useAuthStore = create<IAuthStore>()(
 
             async login(email: string, password: string) {
                 try {
+                    let currentSession: Models.Session | null = null;
+
+                    try {
+                        currentSession = await account.getSession("current");
+                    } catch (error) {
+                        if (
+                            !(error instanceof AppwriteException) ||
+                            ![401, 404].includes(error.code)
+                        ) {
+                            throw error;
+                        }
+                    }
+
+                    if (currentSession) {
+                        try {
+                            const currentUser = await account.get<UserPrefs>();
+
+                            if (currentUser.email.toLowerCase() === email.toLowerCase()) {
+                                const { jwt } = await account.createJWT();
+                                if (!currentUser.prefs?.reputation) {
+                                    await account.updatePrefs<UserPrefs>({ reputation: 0 });
+                                }
+
+                                set({ session: currentSession, user: currentUser, jwt });
+                                return { success: true };
+                            }
+                        } catch (error) {
+                            if (
+                                !(error instanceof AppwriteException) ||
+                                ![401, 404].includes(error.code)
+                            ) {
+                                throw error;
+                            }
+                        }
+
+                        await account.deleteSession("current");
+                    }
+
                     const session = await account.createEmailPasswordSession(email, password)
                     const [user, {jwt}] = await Promise.all([
                         account.get<UserPrefs>(),
