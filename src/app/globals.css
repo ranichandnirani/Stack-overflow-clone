@@ -183,4 +183,10 @@
   html {
     @apply font-sans;
   }
+
+  /* Hide stray floating brand badge from all screens */
+  body [class*="bottom-0"][class*="left-0"],
+  body [class*="left-0"][class*="bottom-0"] {
+    display: none !important;
+  }
 }

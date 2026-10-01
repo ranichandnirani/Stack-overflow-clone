@@ -1,7 +1,5 @@
 # Product Requirements Document: Stack Overflow Clone
 
-**Author:** Chandni Rani · **Repo:** github.com/ranichandnirani/Stack-overflow-clone
-
 ---
 
 ## 1. Overview
@@ -137,3 +135,8 @@ Indexes: full-text on `title`, full-text on `content`.
 - Collection permission drift between code and live Appwrite instance if `getOrCreateDB()` isn't re-run after schema changes — mitigated via `ensure*` self-healing functions.
 - Image rendering breaks (broken image icon) when `attachmentId` is empty and the `<img>` tag isn't conditionally guarded — needs a fix pass.
 - Vote duplication risk if vote documents aren't uniquely keyed per `userId` + target item.
+
+---
+
+**Author:** Chandni Rani 
+**Repo:** github.com/ranichandnirani/Stack-overflow-clone

@@ -50,9 +50,27 @@ export const useAuthStore = create<IAuthStore>()(
 
             async verifySession() {
                 try {
-                    const session = await account.getSession("current")
-                    set({session})
+                    const session = await account.getSession("current");
+                    const [user, { jwt }] = await Promise.all([
+                        account.get<UserPrefs>(),
+                        account.createJWT(),
+                    ]);
+
+                    if (!user.prefs?.reputation) {
+                        await account.updatePrefs<UserPrefs>({ reputation: 0 });
+                    }
+
+                    set({ session, user, jwt });
                 } catch (error) {
+                    const isExpiredOrMissingSession =
+                        error instanceof AppwriteException && [401, 404].includes(error.code);
+
+                    if (isExpiredOrMissingSession) {
+                        set({ session: null, user: null, jwt: null });
+                        useAuthStore.persist.clearStorage();
+                        return;
+                    }
+
                     console.log(error);
                 }
             },
@@ -138,12 +156,13 @@ export const useAuthStore = create<IAuthStore>()(
 
             async logout() {
                 try {
-                    await account.deleteSession("current")
-                    set({session: null, user: null, jwt: null})
-                    
+                    await account.deleteSession("current");
+                    set({ session: null, user: null, jwt: null });
+                    useAuthStore.persist.clearStorage();
                 } catch (error) {
                     console.log(error);
-
+                    set({ session: null, user: null, jwt: null });
+                    useAuthStore.persist.clearStorage();
                 }
             },
             
