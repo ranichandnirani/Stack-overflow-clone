@@ -33,16 +33,6 @@ This project is a full-stack **Stack Overflow-inspired Q&A platform** where deve
 
 ---
 
-## 🎬 Demo
-
-<p align="center">
-  <img src="./public/screenshots/demo.gif" alt="Stack Overflow Clone Demo" width="850"/>
-</p>
-
-> Replace `demo.gif` with your own screen recording/GIF.
-
----
-
 ## 🚀 Features
 
 <table>
