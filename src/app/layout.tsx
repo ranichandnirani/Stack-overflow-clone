@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Rever Flow",
+  title: "River Flow",
   description: "Ask questions and share programming knowledge.",
 };
 

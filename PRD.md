@@ -4,7 +4,7 @@
 
 ## 1. Overview
 
-A Stack Overflow-inspired Q&A platform called Rever Flow that lets users ask programming questions, answer others' questions, comment, and vote on content. Built as a full-stack learning project using **Next.js (App Router, TypeScript)** on the frontend/server layer and **Appwrite** as the backend-as-a-service (database, auth, storage).
+A Stack Overflow-inspired Q&A platform called River Flow that lets users ask programming questions, answer others' questions, comment, and vote on content. Built as a full-stack learning project using **Next.js (App Router, TypeScript)** on the frontend/server layer and **Appwrite** as the backend-as-a-service (database, auth, storage).
 
 **Problem it solves:** Developers need a focused space to ask technical questions, get community answers, and have the best answers surfaced through voting — without the overhead of a general-purpose forum.
 
