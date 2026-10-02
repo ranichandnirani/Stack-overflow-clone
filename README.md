@@ -1,11 +1,11 @@
-# Stack Overflow Clone 🚀
+# Rever Flow 🚀
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=28&duration=3000&pause=1000&color=F97316&center=true&vCenter=true&width=700&lines=Stack+Overflow+Clone;Ask+Questions+%7C+Share+Answers;Learn+%7C+Build+%7C+Collaborate" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=28&duration=3000&pause=1000&color=F97316&center=true&vCenter=true&width=700&lines=Rever+Flow;Ask+Questions+%7C+Share+Answers;Learn+%7C+Build+%7C+Collaborate" alt="Typing SVG" />
 </p>
 
 <p align="center">
-  A modern, full-stack Stack Overflow clone built with <strong>Next.js</strong>, <strong>TypeScript</strong>, and <strong>Appwrite</strong>.
+  A modern, full-stack Q&A platform inspired by Stack Overflow, built with <strong>Next.js</strong>, <strong>TypeScript</strong>, and <strong>Appwrite</strong>.
 </p>
 
 <p align="center">
@@ -19,7 +19,7 @@
 
 ## ✨ About The Project
 
-This project is a full-stack **Stack Overflow-inspired Q&A platform** where developers can:
+This project is a full-stack **Rever Flow Q&A platform** where developers can:
 
 * ❓ Ask programming questions
 * 💬 Share answers and comments
@@ -118,7 +118,7 @@ This project is a full-stack **Stack Overflow-inspired Q&A platform** where deve
 ## 📂 Project Structure
 
 ```text
-Stack-overflow-clone/
+rever-flow/
 │
 ├── public/
 │   └── screenshots/
@@ -152,13 +152,13 @@ Stack-overflow-clone/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/ranichandnirani/Stack-overflow-clone.git
+git clone https://github.com/ranichandnirani/rever-flow.git
 ```
 
 ### 2. Navigate to the project
 
 ```bash
-cd Stack-overflow-clone
+cd rever-flow
 ```
 
 ### 3. Install dependencies

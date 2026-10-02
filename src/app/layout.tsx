@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Stack Overflow Clone",
+  title: "Rever Flow",
   description: "Ask questions and share programming knowledge.",
 };
 
