@@ -36,7 +36,7 @@ const Footer = () => {
                         </li>
                     ))}
                 </ul>
-                <div className="mt-4 text-center">&copy; {new Date().getFullYear()} Stack Overflow</div>
+                <div className="mt-4 text-center">&copy; {new Date().getFullYear()} Rever Flow</div>
             </div>
             <AnimatedGridPattern
                 numSquares={30}
