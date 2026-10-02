@@ -118,15 +118,14 @@ This project is a full-stack **Rever Flow Q&A platform** where developers can:
 ## 📂 Project Structure
 
 ```text
-rever-flow/
+stackoverflow-appwrite/
 │
 ├── public/
 │   └── screenshots/
-│       ├── home.png
-│       ├── question.png
-│       ├── ask-question.png
-│       ├── login.png
-│       └── demo.gif
+│       ├── Home.png
+│       ├── Question.png
+│       ├── Ask-Question.png
+│       └── Login.gif
 │
 ├── src/
 │   ├── app/
