@@ -1,7 +1,7 @@
-# Rever Flow 🚀
+# River Flow 🚀
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=28&duration=3000&pause=1000&color=F97316&center=true&vCenter=true&width=700&lines=Rever+Flow;Ask+Questions+%7C+Share+Answers;Learn+%7C+Build+%7C+Collaborate" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=28&duration=3000&pause=1000&color=F97316&center=true&vCenter=true&width=700&lines=River+Flow;Ask+Questions+%7C+Share+Answers;Learn+%7C+Build+%7C+Collaborate" alt="Typing SVG" />
 </p>
 
 <p align="center">
@@ -19,7 +19,7 @@
 
 ## ✨ About The Project
 
-This project is a full-stack **Rever Flow Q&A platform** where developers can:
+This project is a full-stack **River Flow Q&A platform** where developers can:
 
 * ❓ Ask programming questions
 * 💬 Share answers and comments
@@ -157,7 +157,7 @@ git clone https://github.com/ranichandnirani/stackoverflow-appwrite.git
 ### 2. Navigate to the project
 
 ```bash
-cd rever-flow
+cd river-flow
 ```
 
 ### 3. Install dependencies

@@ -1,4 +1,4 @@
-# Product Requirements Document: Rever Flow
+# Product Requirements Document: River Flow
 
 ---
 
