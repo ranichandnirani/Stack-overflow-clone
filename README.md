@@ -151,14 +151,16 @@ stackoverflow-appwrite/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/ranichandnirani/stackoverflow-appwrite.git
+git clone https://github.com/ranichandnirani/Stack-overflow-clone.git
 ```
 
 ### 2. Navigate to the project
 
 ```bash
-cd river-flow
+cd stackoverflow-appwrite
 ```
+
+> If your local folder name differs, cd into the repository folder that was created by the clone command.
 
 ### 3. Install dependencies
 
@@ -173,12 +175,12 @@ Create an Appwrite project and configure authentication, database, collections, 
 Create a `.env.local` file:
 
 ```env
-NEXT_PUBLIC_APPWRITE_ENDPOINT=your_appwrite_endpoint
+NEXT_PUBLIC_APPWRITE_HOST_URL=https://cloud.appwrite.io/v1
 NEXT_PUBLIC_APPWRITE_PROJECT_ID=your_project_id
-NEXT_PUBLIC_APPWRITE_DATABASE_ID=your_database_id
-NEXT_PUBLIC_APPWRITE_BUCKET_ID=your_bucket_id
 APPWRITE_API_KEY=your_appwrite_api_key
 ```
+
+> Use your Appwrite project endpoint, project ID, and API key from your Appwrite dashboard.
 
 > ⚠️ Never commit real API keys or sensitive environment variables.
 
