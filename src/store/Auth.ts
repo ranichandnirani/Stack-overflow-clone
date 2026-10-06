@@ -71,7 +71,7 @@ export const useAuthStore = create<IAuthStore>()(
                         return;
                     }
 
-                    console.log(error);
+                    console.error("Auth session verification failed:", error);
                 }
             },
 

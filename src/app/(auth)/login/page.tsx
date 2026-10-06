@@ -1,10 +1,12 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/Auth";
 
 export default function LoginPage() {
     const { login } = useAuthStore();
+    const router = useRouter();
     const [isLoading, setIsLoading] = React.useState(false);
     const [error, setError] = React.useState("");
 
@@ -22,7 +24,15 @@ export default function LoginPage() {
         setIsLoading(true);
         setError("");
         const response = await login(email, password);
-        if (response.error) setError(response.error.message);
+
+        if (response.error) {
+            setError(response.error.message);
+            setIsLoading(false);
+            return;
+        }
+
+        router.push("/");
+        router.refresh();
         setIsLoading(false);
     };
 

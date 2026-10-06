@@ -254,6 +254,7 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
                     }}
                 />
                 {(attachmentPreview || existingAttachmentPreview) && (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                         src={attachmentPreview || existingAttachmentPreview}
                         alt="Question attachment preview"

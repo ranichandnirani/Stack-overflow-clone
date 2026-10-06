@@ -1,10 +1,12 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/Auth";
 
 export default function RegisterPage() {
     const { createAccount, login } = useAuthStore();
+    const router = useRouter();
     const [error, setError] = React.useState("");
     const [isLoading, setIsLoading] = React.useState(false);
 
@@ -24,22 +26,24 @@ export default function RegisterPage() {
         setIsLoading(true);
         setError("");
 
-        const response = await createAccount(`
-            ${firstname} ${lastname}`, 
-            email?.toString(), 
-            password?.toString()
-        );
+        const response = await createAccount(`${firstname} ${lastname}`.trim(), email, password);
 
         if (response.error) {
-            setError(() => response.error!.message);
-        } else {
-            const loginResponse = await login(email.toString(), password.toString());
-
-            if (loginResponse.error) {
-                setError(() => loginResponse.error!.message);
-            }
+            setError(response.error.message);
+            setIsLoading(false);
+            return;
         }
 
+        const loginResponse = await login(email, password);
+
+        if (loginResponse.error) {
+            setError(loginResponse.error.message);
+            setIsLoading(false);
+            return;
+        }
+
+        router.push("/");
+        router.refresh();
         setIsLoading(false);
     };
 
