@@ -27,7 +27,9 @@ const VoteButtons = ({
     className?: string;
 }) => {
     const [votedDocument, setVotedDocument] = React.useState<VoteDocument | null>(); // undefined means not fetched yet
-    const [voteResult, setVoteResult] = React.useState<number>(upvotes.total - downvotes.total);
+    const [voteScore, setVoteScore] = React.useState<number>(
+        Math.max(0, upvotes.total - downvotes.total)
+    );
 
     const { user } = useAuthStore();
     const router = useRouter();
@@ -65,8 +67,9 @@ const VoteButtons = ({
 
             if (!response.ok) throw data;
 
-            setVoteResult(() => data.data.voteResult);
+            setVoteScore(() => data.data.voteScore);
             setVotedDocument(() => data.data.document);
+            router.refresh();
         } catch (error: unknown) {
             window.alert(error instanceof Error ? error.message : "Something went wrong");
         }
@@ -92,8 +95,9 @@ const VoteButtons = ({
 
             if (!response.ok) throw data;
 
-            setVoteResult(() => data.data.voteResult);
+            setVoteScore(() => data.data.voteScore);
             setVotedDocument(() => data.data.document);
+            router.refresh();
         } catch (error: unknown) {
             window.alert(error instanceof Error ? error.message : "Something went wrong");
         }
@@ -113,7 +117,7 @@ const VoteButtons = ({
             >
                 <IconCaretUpFilled />
             </button>
-            <span>{voteResult}</span>
+            <span>{voteScore}</span>
             <button
                 className={cn(
                     "flex h-10 w-10 items-center justify-center rounded-full border p-1 duration-200 hover:bg-white/10",

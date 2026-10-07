@@ -7,7 +7,52 @@ import {
 import { databases, users } from "@/models/server/config";
 import { UserPrefs } from "@/store/Auth";
 import { NextRequest, NextResponse } from "next/server";
-import { ID, Query } from "node-appwrite";
+import { ID, Models, Query } from "node-appwrite";
+
+type VoteDocument = Models.Document & {
+  type: "question" | "answer";
+  typeId: string;
+  voteStatus: "upvoted" | "downvoted";
+  votedById: string;
+};
+
+async function getAuthoredDocuments(collection: string, authorId: string) {
+  const documents = [];
+  let offset = 0;
+
+  while (true) {
+    const page = await databases.listDocuments(db, collection, [
+      Query.equal("authorId", authorId),
+      Query.limit(100),
+      Query.offset(offset),
+    ]);
+    documents.push(...page.documents);
+    offset += page.documents.length;
+
+    if (offset >= page.total || page.documents.length === 0) break;
+  }
+
+  return documents;
+}
+
+async function getVotesForContent(typeIds: string[]) {
+  const documents = [];
+  let offset = 0;
+
+  while (typeIds.length > 0) {
+    const page = await databases.listDocuments(db, voteCollection, [
+      Query.equal("typeId", typeIds),
+      Query.limit(100),
+      Query.offset(offset),
+    ]);
+    documents.push(...page.documents);
+    offset += page.documents.length;
+
+    if (offset >= page.total || page.documents.length === 0) break;
+  }
+
+  return documents;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,127 +63,84 @@ export async function POST(request: NextRequest) {
       Query.equal("typeId", typeId),
       Query.equal("votedById", votedById),
     ]);
+    const previousVote = userVoteResponse.documents[0] ?? null;
+    const isRemovingVote = previousVote?.voteStatus === voteStatus;
+    const questionOrAnswer = await databases.getDocument(
+      db,
+      type === "question" ? questionCollection : answerCollection,
+      typeId,
+    );
 
-    if (userVoteResponse.documents.length > 0) {
+    let document: Awaited<ReturnType<typeof databases.createDocument>> | null = null;
+    let message: string;
+
+    if (isRemovingVote && previousVote) {
       await databases.deleteDocument(
         db,
         voteCollection,
-        userVoteResponse.documents[0].$id,
+        previousVote.$id,
       );
-
-      // Decrease the reputation of the question/answer author
-      const questionOrAnswer = await databases.getDocument(
+      message = "Vote Withdrawn";
+    } else if (previousVote) {
+      document = await databases.updateDocument<VoteDocument>(
         db,
-        type === "question" ? questionCollection : answerCollection,
-        typeId,
+        voteCollection,
+        previousVote.$id,
+        { voteStatus },
       );
-
-      const authorPrefs = await users.getPrefs<UserPrefs>(
-        questionOrAnswer.authorId,
-      );
-
-      await users.updatePrefs<UserPrefs>(questionOrAnswer.authorId, {
-        reputation:
-          userVoteResponse.documents[0].voteStatus === "upvoted"
-            ? Number(authorPrefs.reputation) - 1
-            : Number(authorPrefs.reputation) + 1,
-      });
-    }
-
-    // that means prev vote does not exists or voteStatus changed
-    if (userVoteResponse.documents[0]?.voteStatus !== voteStatus) {
-      const doc = await databases.createDocument(
+      message = "Vote Status Updated";
+    } else {
+      document = await databases.createDocument<VoteDocument>(
         db,
         voteCollection,
         ID.unique(),
-        {
-          type,
-          typeId,
-          voteStatus,
-          votedById,
-        },
+        { type, typeId, voteStatus, votedById },
       );
-
-      // Increate/Decrease the reputation of the question/answer author accordingly
-      const questionOrAnswer = await databases.getDocument(
-        db,
-        type === "question" ? questionCollection : answerCollection,
-        typeId,
-      );
-
-      const authorPrefs = await users.getPrefs<UserPrefs>(
-        questionOrAnswer.authorId,
-      );
-
-      if (userVoteResponse.documents[0]) {
-        await users.updatePrefs<UserPrefs>(questionOrAnswer.authorId, {
-          reputation:
-            userVoteResponse.documents[0].voteStatus === "upvoted"
-              ? Number(authorPrefs.reputation) - 1
-              : Number(authorPrefs.reputation) + 1,
-        });
-      } else {
-        await users.updatePrefs<UserPrefs>(questionOrAnswer.authorId, {
-          reputation:
-            voteStatus === "upvoted"
-              ? Number(authorPrefs.reputation) + 1
-              : Number(authorPrefs.reputation) - 1,
-        });
-      }
-
-      const [upvotes, downvotes] = await Promise.all([
-        databases.listDocuments(db, voteCollection, [
-          Query.equal("type", type),
-          Query.equal("typeId", typeId),
-          Query.equal("voteStatus", "upvoted"),
-          Query.limit(1),
-        ]),
-        databases.listDocuments(db, voteCollection, [
-          Query.equal("type", type),
-          Query.equal("typeId", typeId),
-          Query.equal("voteStatus", "downvoted"),
-          Query.limit(1),
-        ]),
-      ]);
-
-      return NextResponse.json(
-        {
-          data: { document: doc, voteResult: upvotes.total - downvotes.total },
-          message: userVoteResponse.documents[0] ? "Vote Status Updated" : "Voted",
-        },
-        {
-          status: 201,
-        },
-      );
+      message = "Voted";
     }
 
-    const [upvotes, downvotes] = await Promise.all([
+    const [questions, answers, upvotes, downvotes] = await Promise.all([
+      getAuthoredDocuments(questionCollection, questionOrAnswer.authorId),
+      getAuthoredDocuments(answerCollection, questionOrAnswer.authorId),
       databases.listDocuments(db, voteCollection, [
         Query.equal("type", type),
         Query.equal("typeId", typeId),
         Query.equal("voteStatus", "upvoted"),
-        // Query.equal("votedById", votedById),
         Query.limit(1),
       ]),
       databases.listDocuments(db, voteCollection, [
         Query.equal("type", type),
         Query.equal("typeId", typeId),
         Query.equal("voteStatus", "downvoted"),
-        // Query.equal("votedById", votedById),
         Query.limit(1),
       ]),
     ]);
 
+    const authoredContentIds = [...questions, ...answers].map(item => item.$id);
+    const authoredVotes = await getVotesForContent(authoredContentIds);
+    const reputation = Math.max(
+      0,
+      answers.length + authoredVotes.reduce(
+        (total, vote) => total + (vote.voteStatus === "upvoted" ? 1 : -1),
+        0,
+      ),
+    );
+    const author = await users.get<UserPrefs>(questionOrAnswer.authorId);
+    await users.updatePrefs<UserPrefs>(questionOrAnswer.authorId, {
+      ...author.prefs,
+      reputation,
+    });
+
     return NextResponse.json(
       {
         data: {
-          document: null,
-          voteResult: upvotes.total - downvotes.total,
+          document,
+          voteScore: Math.max(0, upvotes.total - downvotes.total),
         },
-        message: "Vote Withdrawn",
+        message,
       },
       {
-        status: 200,
+        status: isRemovingVote ? 200 : 201,
       },
     );
   } catch (error: unknown) {

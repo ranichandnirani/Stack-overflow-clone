@@ -11,15 +11,15 @@ const Page = async ({
     searchParams,
 }: {
     params: Promise<{ userId: string; userSlug: string }>;
-    searchParams: { page?: string };
+    searchParams: Promise<{ page?: string }>;
 }) => {
     const { userId } = await params;
-    searchParams.page ||= "1";
+    const { page = "1" } = await searchParams;
 
     const queries = [
         Query.equal("authorId", userId),
         Query.orderDesc("$createdAt"),
-        Query.offset((+searchParams.page - 1) * 25),
+        Query.offset((+page - 1) * 25),
         Query.limit(25),
     ];
 
@@ -46,7 +46,6 @@ const Page = async ({
                 totalVotes: votes.total,
                 author: {
                     $id: author.$id,
-                    reputation: author.prefs.reputation,
                     name: author.name,
                 },
             };
@@ -63,7 +62,7 @@ const Page = async ({
                     <QuestionCard key={ques.$id} ques={ques} />
                 ))}
             </div>
-            <Pagination total={questions.total} limit={25} page={searchParams.page} />
+            <Pagination total={questions.total} limit={25} page={page} />
         </div>
     );
 };

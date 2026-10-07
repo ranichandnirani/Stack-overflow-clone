@@ -87,16 +87,17 @@ export function IconCloud({
           img.src = items[index] as string
           img.onload = () => {
             offCtx.clearRect(0, 0, offscreen.width, offscreen.height)
-
-            // Create circular clipping path
-            offCtx.beginPath()
-            offCtx.arc(20, 20, 20, 0, Math.PI * 2)
-            offCtx.closePath()
-            offCtx.clip()
-
-            // Draw the image
             offCtx.drawImage(img, 0, 0, 40, 40)
 
+            imagesLoadedRef.current[index] = true
+          }
+          img.onerror = () => {
+            offCtx.clearRect(0, 0, offscreen.width, offscreen.height)
+            offCtx.fillStyle = "#94a3b8"
+            offCtx.font = "bold 14px sans-serif"
+            offCtx.textAlign = "center"
+            offCtx.textBaseline = "middle"
+            offCtx.fillText("?", 20, 20)
             imagesLoadedRef.current[index] = true
           }
         } else {
@@ -294,7 +295,7 @@ export function IconCloud({
             canvas.height / 2 + rotatedY
           )
           ctx.scale(scale, scale)
-          ctx.globalAlpha = opacity
+          ctx.globalAlpha = opacity * 0.9
 
           if (icons || images) {
             // Only try to render icons/images if they exist

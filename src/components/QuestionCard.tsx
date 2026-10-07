@@ -16,12 +16,11 @@ type QuestionFields = Models.Document & {
     author?: {
         $id: string;
         name: string;
-        reputation: number;
     };
 };
 
 const QuestionCard = ({ ques }: { ques: QuestionFields }) => {
-    const author = ques.author ?? { $id: "", name: "Unknown user", reputation: 0 };
+    const author = ques.author ?? { $id: "", name: "Unknown user" };
     const [height, setHeight] = React.useState(0);
     const ref = React.useRef<HTMLDivElement>(null);
 
@@ -72,7 +71,6 @@ const QuestionCard = ({ ques }: { ques: QuestionFields }) => {
                         >
                             {author.name}
                         </Link>
-                        <strong>&quot;{author.reputation}&quot;</strong>
                     </div>
                     <span>asked {convertDateToRelativeTime(new Date(ques.$createdAt))}</span>
                 </div>

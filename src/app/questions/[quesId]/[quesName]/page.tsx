@@ -65,7 +65,6 @@ const Page = async ({ params }: { params: Promise<{ quesId: string; quesName: st
                     author: {
                         $id: author.$id,
                         name: author.name,
-                        reputation: author.prefs.reputation,
                     },
                 };
             })
@@ -101,7 +100,6 @@ const Page = async ({ params }: { params: Promise<{ quesId: string; quesName: st
                             author: {
                                 $id: author.$id,
                                 name: author.name,
-                                reputation: author.prefs.reputation,
                             },
                         };
                     })
@@ -115,7 +113,6 @@ const Page = async ({ params }: { params: Promise<{ quesId: string; quesName: st
                     author: {
                         $id: author.$id,
                         name: author.name,
-                        reputation: author.prefs.reputation,
                     },
                 };
             })
@@ -147,7 +144,6 @@ const Page = async ({ params }: { params: Promise<{ quesId: string; quesName: st
                                 Asked {convertDateToRelativeTime(new Date(question.$createdAt))}
                             </span>
                             <span>Answer {answers.total}</span>
-                            <span>Votes {upvotes.total + downvotes.total}</span>
                         </div>
                     </div>
                     <Link href="/questions/ask" className="ml-auto inline-block shrink-0">
@@ -217,8 +213,8 @@ const Page = async ({ params }: { params: Promise<{ quesId: string; quesName: st
                                 >
                                     {author.name}
                                 </Link>
-                                <p>
-                                    <strong>{author.prefs.reputation}</strong>
+                                <p className="text-lg font-semibold  text-white-400">
+                                    {Math.max(0, upvotes.total - downvotes.total)}
                                 </p>
                             </div>
                         </div>

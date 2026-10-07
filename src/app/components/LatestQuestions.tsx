@@ -39,7 +39,6 @@ const LatestQuestions = async () => {
                 author: author
                     ? {
                           $id: author.$id,
-                          reputation: author.prefs.reputation,
                           name: author.name,
                       }
                     : undefined,

@@ -12,15 +12,15 @@ const Page = async ({
     searchParams,
 }: {
     params: Promise<{ userId: string; userSlug: string }>;
-    searchParams: { page?: string };
+    searchParams: Promise<{ page?: string }>;
 }) => {
     const { userId } = await params;
-    searchParams.page ||= "1";
+    const { page = "1" } = await searchParams;
 
     const queries = [
         Query.equal("authorId", userId),
         Query.orderDesc("$createdAt"),
-        Query.offset((+searchParams.page - 1) * 25),
+        Query.offset((+page - 1) * 25),
         Query.limit(25),
     ];
 
@@ -55,7 +55,7 @@ const Page = async ({
                     </div>
                 ))}
             </div>
-            <Pagination total={answers.total} limit={25} page={searchParams.page} />
+            <Pagination total={answers.total} limit={25} page={page} />
         </div>
     );
 };

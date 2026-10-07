@@ -17,7 +17,6 @@ type Answer = Models.Document & {
     author: {
         $id: string;
         name: string;
-        reputation: number;
     };
     upvotesDocuments: Models.DocumentList<Models.Document>;
     downvotesDocuments: Models.DocumentList<Models.Document>;
@@ -136,9 +135,6 @@ const Answers = ({
                                 >
                                     {answer.author.name}
                                 </Link>
-                                <p>
-                                    <strong>{answer.author.reputation}</strong>
-                                </p>
                             </div>
                         </div>
                         <Comments
