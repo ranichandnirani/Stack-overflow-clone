@@ -3,8 +3,11 @@ import Header from "./components/Header";
 import HeroSection from "./components/HeroSection";
 import LatestQuestions from "./components/LatestQuestions";
 import TopContributers from "./components/TopContributers";
+import { connection } from "next/server";
 
-export default function Home() {
+export default async function Home() {
+  await connection();
+
   return (
     <div className="flex min-h-full flex-col">
       <Header />
