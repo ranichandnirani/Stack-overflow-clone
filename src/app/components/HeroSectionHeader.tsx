@@ -53,7 +53,7 @@ const HeroSectionHeader = () => {
             <div className="relative z-10 grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="flex items-center justify-center">
                     <div className="space-y-4 text-center">
-                        <h1 className="pointer-events-none z-10 whitespace-pre-wrap bg-linear-to-b from-[#ffd319] via-[#ff2975] to-[#8c1eff] bg-clip-text text-center text-7xl font-bold leading-none tracking-tighter text-transparent">
+                        <h1 className="pointer-events-none z-10 whitespace-pre-wrap bg-linear-to-b from-orange-600 via-orange-500 to-amber-600 bg-clip-text text-center text-7xl font-bold leading-none tracking-tighter text-transparent dark:from-[#ffd319] dark:via-[#ff2975] dark:to-[#8c1eff]">
                             River Flow
                         </h1>
                         <p className="text-center text-xl font-bold leading-none tracking-tighter">
@@ -63,7 +63,7 @@ const HeroSectionHeader = () => {
                         <div className="flex items-center justify-center gap-4">
                             {session ? (
                                 <Link href="/questions/ask">
-                                    <ShimmerButton className="shadow-2xl">
+                                    <ShimmerButton background="var(--hero-cta-background)" className="shadow-2xl">
                                         <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg">
                                             Ask a question
                                         </span>
@@ -72,7 +72,7 @@ const HeroSectionHeader = () => {
                             ) : (
                                 <>
                                     <Link href="/register">
-                                        <ShimmerButton className="shadow-2xl">
+                                        <ShimmerButton background="var(--hero-cta-background)" className="shadow-2xl">
                                             <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-lg">
                                                 Sign up
                                             </span>

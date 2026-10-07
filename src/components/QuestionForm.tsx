@@ -32,11 +32,13 @@ const LabelInputContainer = ({
     return (
         <div
             className={cn(
-                "relative flex w-full flex-col space-y-2 overflow-hidden rounded-xl border border-white/20 bg-slate-950 p-4",
+                "relative flex w-full flex-col space-y-2 overflow-hidden rounded-xl border border-slate-200 bg-white p-4 text-slate-900 shadow-sm dark:border-white/20 dark:bg-slate-950 dark:text-slate-100 dark:shadow-none",
                 className
             )}
         >
-            <Meteors number={30} />
+            <div className="pointer-events-none absolute inset-0 hidden dark:block">
+                <Meteors number={30} />
+            </div>
             {children}
         </div>
     );
@@ -203,7 +205,7 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
                 <Label htmlFor="title">
                     Title Address
                     <br />
-                    <small>
+                    <small className="text-slate-500 dark:text-slate-400">
                         Be specific and imagine you&apos;re asking a question to another person.
                     </small>
                 </Label>
@@ -220,7 +222,7 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
                 <Label htmlFor="content">
                     What are the details of your problem?
                     <br />
-                    <small>
+                    <small className="text-slate-500 dark:text-slate-400">
                         Introduce the problem and expand on what you put in the title. Minimum 20
                         characters.
                     </small>
@@ -234,7 +236,7 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
                 <Label htmlFor="image">
                     Image
                     <br />
-                    <small>
+                    <small className="text-slate-500 dark:text-slate-400">
                         Optional. Add an image only when it helps explain the problem.
                     </small>
                 </Label>
@@ -266,7 +268,7 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
                 <Label htmlFor="tag">
                     Tags
                     <br />
-                    <small>
+                    <small className="text-slate-500 dark:text-slate-400">
                         Add tags to describe what your question is about. Start typing to see
                         suggestions.
                     </small>
@@ -283,7 +285,7 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
                         />
                     </div>
                     <button
-                        className="relative shrink-0 rounded-full border border-slate-600 bg-slate-700 px-8 py-2 text-sm text-white transition duration-200 hover:shadow-2xl hover:shadow-white/10"
+                        className="relative shrink-0 rounded-full border border-orange-600 bg-orange-500 px-8 py-2 text-sm text-white transition duration-200 hover:bg-orange-600 hover:shadow-lg hover:shadow-orange-500/20 dark:border-slate-600 dark:bg-slate-700 dark:hover:bg-slate-600 dark:hover:shadow-white/10"
                         type="button"
                         onClick={() => {
                             if (tag.length === 0) return;
@@ -301,11 +303,11 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
                 <div className="flex flex-wrap gap-2">
                     {Array.from(formData.tags).map((tag, index) => (
                         <div key={index} className="flex items-center gap-2">
-                            <div className="group relative inline-block rounded-full bg-slate-800 p-px text-xs font-semibold leading-6 text-white no-underline shadow-2xl shadow-zinc-900">
+                            <div className="group relative inline-block rounded-full bg-orange-100 p-px text-xs font-semibold leading-6 text-orange-900 no-underline shadow-sm dark:bg-slate-800 dark:text-white dark:shadow-2xl dark:shadow-zinc-900">
                                 <span className="absolute inset-0 overflow-hidden rounded-full">
                                     <span className="absolute inset-0 rounded-full bg-[radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                                 </span>
-                                <div className="relative z-10 flex items-center space-x-2 rounded-full bg-zinc-950 px-4 py-0.5 ring-1 ring-white/10">
+                                <div className="relative z-10 flex items-center space-x-2 rounded-full bg-white px-4 py-0.5 ring-1 ring-orange-200 dark:bg-zinc-950 dark:ring-white/10">
                                     <span>{tag}</span>
                                     <button
                                         onClick={() => {
@@ -328,7 +330,7 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
                 </div>
             </LabelInputContainer>
             <button
-                className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-size-[200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+                className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-orange-600 bg-orange-500 bg-size-[200%_100%] px-6 font-medium text-white transition-colors hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-background dark:border-slate-800 dark:bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] dark:text-slate-400 dark:focus:ring-slate-400 dark:focus:ring-offset-slate-950"
                 type="submit"
                 disabled={loading}
             >

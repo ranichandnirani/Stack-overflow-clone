@@ -33,10 +33,10 @@ const QuestionCard = ({ ques }: { ques: QuestionFields }) => {
     return (
         <div
             ref={ref}
-            className="relative flex flex-col gap-4 overflow-hidden rounded-xl border border-white/20 bg-white/5 p-4 duration-200 hover:bg-white/10 sm:flex-row"
+            className="relative flex flex-col gap-4 overflow-hidden rounded-xl border border-slate-200 bg-white p-4 text-slate-800 shadow-sm duration-200 hover:border-orange-200 hover:shadow-md dark:border-white/20 dark:bg-white/5 dark:text-inherit dark:hover:bg-white/10 sm:flex-row"
         >
             <BorderBeam size={height} duration={12} delay={9} />
-            <div className="relative shrink-0 text-sm sm:text-right">
+            <div className="relative shrink-0 text-sm text-slate-600 dark:text-slate-300 sm:text-right">
                 <p>{ques.totalVotes ?? 0} votes</p>
                 <p>{ques.totalAnswers ?? 0} answers</p>
             </div>
@@ -52,7 +52,7 @@ const QuestionCard = ({ ques }: { ques: QuestionFields }) => {
                         <Link
                             key={tag}
                             href={`/questions?tag=${tag}`}
-                            className="inline-block rounded-lg bg-white/10 px-2 py-0.5 duration-200 hover:bg-white/20"
+                            className="inline-block rounded-lg bg-slate-100 px-2 py-0.5 text-slate-700 duration-200 hover:bg-orange-50 hover:text-orange-800 dark:bg-white/10 dark:text-inherit dark:hover:bg-white/20"
                         >
                             #{tag}
                         </Link>
