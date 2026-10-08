@@ -28,12 +28,12 @@ const Navbar = () => {
     ];
 
     return (
-        <ul className="flex w-full shrink-0 gap-1 overflow-auto sm:w-40 sm:flex-col">
+        <ul className="flex w-full shrink-0 gap-1 overflow-x-auto pb-1 lg:w-40 lg:flex-col lg:overflow-visible lg:pb-0">
             {items.map(item => (
-                <li key={item.name}>
+                <li key={item.name} className="shrink-0">
                     <Link
                         href={item.href}
-                        className={`block w-full rounded-full px-3 py-0.5 duration-200 ${
+                        className={`block whitespace-nowrap rounded-full px-3 py-1.5 duration-200 lg:py-0.5 ${
                             pathname === item.href ? "bg-white/20" : "hover:bg-white/20"
                         }`}
                     >

@@ -130,6 +130,16 @@ export const ProductCard = ({
   };
   translate: MotionValue<number>;
 }) => {
+  const [isLandscape, setIsLandscape] = React.useState(false);
+  const imageRef = React.useRef<HTMLImageElement>(null);
+
+  React.useEffect(() => {
+    const image = imageRef.current;
+    if (image?.complete && image.naturalWidth > 0) {
+      setIsLandscape(image.naturalWidth > image.naturalHeight);
+    }
+  }, [product.thumbnail]);
+
   return (
     <motion.div
       style={{
@@ -139,25 +149,38 @@ export const ProductCard = ({
         y: -20,
       }}
       key={product.title}
-      className="group/product h-96 w-120 relative shrink-0"
+      className="group/product relative w-[min(70vw,22rem)] shrink-0"
     >
       <a
         href={product.link}
-        className="block group-hover/product:shadow-2xl "
+        aria-label={`Open question: ${product.title}`}
+        className="block overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-950/25 transition-shadow group-hover/product:shadow-2xl group-hover/product:shadow-orange-500/30 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400 dark:border-white/10 dark:bg-neutral-950 dark:shadow-amber-200/20 dark:group-hover/product:shadow-amber-200/35"
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={product.thumbnail}
-          height="600"
-          width="600"
-          className="object-cover object-top-left absolute h-full w-full inset-0"
-          alt={product.title}
-        />
+        <div className={`relative w-full overflow-hidden bg-neutral-900 border-2 border-white/20 rounded-2xl shadow-amber-500 ${isLandscape ? "aspect-3/2" : "aspect-4/5"}`}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={product.thumbnail}
+            className="absolute inset-0 h-full w-full scale-110 object-cover opacity-70 blur-xl"
+            alt=""
+            aria-hidden="true"
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={product.thumbnail}
+            className="absolute inset-0 h-full w-full object-contain transition-[filter] duration-300 group-hover/product:blur-[2px] group-focus-within/product:blur-[2px]"
+            alt={product.title}
+            ref={imageRef}
+            onLoad={event => {
+              setIsLandscape(event.currentTarget.naturalWidth > event.currentTarget.naturalHeight);
+            }}
+          />
+          <div className="pointer-events-none absolute inset-0 grid place-items-center p-5 opacity-0 transition-opacity duration-200 group-hover/product:opacity-100 group-focus-within/product:opacity-100">
+            <h2 className="line-clamp-3 max-w-[90%] rounded-xl border border-white/30 bg-black/35 px-5 py-3 text-center text-sm font-medium leading-snug text-white shadow-xl backdrop-blur-md sm:text-base">
+              {product.title}
+            </h2>
+          </div>
+        </div>
       </a>
-      <div className="absolute inset-0 h-full w-full opacity-0 group-hover/product:opacity-80 bg-black pointer-events-none"></div>
-      <h2 className="absolute bottom-4 left-4 opacity-0 group-hover/product:opacity-100 text-white">
-        {product.title}
-      </h2>
     </motion.div>
   );
 };
