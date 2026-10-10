@@ -12,7 +12,7 @@ const LatestQuestions = async () => {
     ]);
     questions.documents = await Promise.all(
         questions.documents.map(async ques => {
-            const [author, answers, votes] = await Promise.all([
+            const [author, answers, upvotes, downvotes] = await Promise.all([
                 users.get<UserPrefs>(ques.authorId).catch(error => {
                     if (error instanceof AppwriteException && error.code === 404) {
                         return null;
@@ -26,6 +26,13 @@ const LatestQuestions = async () => {
                 databases.listDocuments(db, voteCollection, [
                     Query.equal("type", "question"),
                     Query.equal("typeId", ques.$id),
+                    Query.equal("voteStatus", "upvoted"),
+                    Query.limit(1), // for optimization
+                ]),
+                databases.listDocuments(db, voteCollection, [
+                    Query.equal("type", "question"),
+                    Query.equal("typeId", ques.$id),
+                    Query.equal("voteStatus", "downvoted"),
                     Query.limit(1), // for optimization
                 ]),
             ]);
@@ -33,7 +40,7 @@ const LatestQuestions = async () => {
             return {
                 ...ques,
                 totalAnswers: answers.total,
-                totalVotes: votes.total,
+                totalVotes: Math.max(0, upvotes.total - downvotes.total),
                 author: author
                     ? {
                           $id: author.$id,

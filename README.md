@@ -98,7 +98,7 @@ This project is a full-stack **River Flow Q&A platform** where developers can:
 ### ❓ Question Page
 
 <p align="center">
-  <img src="./public/screenshots/Questions.png" width="850" alt="Question Page"/>
+  <img src="./public/screenshots/Questions-latest.png" width="850" alt="Question Page"/>
 </p>
 
 ### ✍️ Ask Question
@@ -123,7 +123,7 @@ stackoverflow-appwrite/
 ├── public/
 │   └── screenshots/
 │       ├── Home.png
-│       ├── Question.png
+│       ├── Question-latest.png
 │       ├── Ask-Question.png
 │       └── Login.gif
 │

@@ -27,7 +27,7 @@ const Page = async ({
 
     const questionDocuments = await Promise.all(
         questions.documents.map(async ques => {
-            const [author, answers, votes] = await Promise.all([
+            const [author, answers, upvotes, downvotes] = await Promise.all([
                 users.get<UserPrefs>(ques.authorId),
                 databases.listDocuments(db, answerCollection, [
                     Query.equal("questionId", ques.$id),
@@ -36,6 +36,13 @@ const Page = async ({
                 databases.listDocuments(db, voteCollection, [
                     Query.equal("type", "question"),
                     Query.equal("typeId", ques.$id),
+                    Query.equal("voteStatus", "upvoted"),
+                    Query.limit(1), // for optimization
+                ]),
+                databases.listDocuments(db, voteCollection, [
+                    Query.equal("type", "question"),
+                    Query.equal("typeId", ques.$id),
+                    Query.equal("voteStatus", "downvoted"),
                     Query.limit(1), // for optimization
                 ]),
             ]);
@@ -43,7 +50,7 @@ const Page = async ({
             return {
                 ...ques,
                 totalAnswers: answers.total,
-                totalVotes: votes.total,
+                totalVotes: Math.max(0, upvotes.total - downvotes.total),
                 author: {
                     $id: author.$id,
                     name: author.name,
